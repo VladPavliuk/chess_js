@@ -1,6 +1,6 @@
-var copy = toCopy => JSON.parse(JSON.stringify(toCopy));
+const copy = toCopy => JSON.parse(JSON.stringify(toCopy));
 
-var baseFigure = () => ({
+const baseFigure = () => ({
     type: 'base',
     allowedMoves: [],
     sameAttackMoves: true,
@@ -10,35 +10,35 @@ var baseFigure = () => ({
     img: ''
 });
 
-var kingFigure = () => ({
+const kingFigure = () => ({
     ...baseFigure(),
     type: 'king',
     allowedMoves: [{x: 1, y: 0}, {x: 1, y: 1}, {x: 0, y: 1}],
     img: 'K'
 });
 
-var queenFigure = () => ({
+const queenFigure = () => ({
     ...baseFigure(),
     type: 'queen',
     allowedMoves: [{x: true, y: true}, {x: true, y: 0}, {x: 0, y: true}],
     img: 'Q'
 });
 
-var rookFigure = () => ({
+const rookFigure = () => ({
     ...baseFigure(),
     type: 'rook',
     allowedMoves: [{x: true, y: 0}, {x: 0, y: true}],
     img: 'R'
 });
 
-var bishopFigure = () => ({
+const bishopFigure = () => ({
     ...baseFigure(),
     type: 'bishop',
     allowedMoves: [{x: true, y: true}],
     img: 'B'
 });
 
-var knightFigure = () => ({
+const knightFigure = () => ({
     ...baseFigure(),
     type: 'knight',
     allowedMoves: [{x: 1, y: 2}, {x: 2, y: 1}],
@@ -46,7 +46,7 @@ var knightFigure = () => ({
     jumpOver: true
 });
 
-var pawnFigure = () => ({
+const pawnFigure = () => ({
     ...baseFigure(),
     type: 'pawn',
     allowedMoves: [{x: 0, y: 1}],
@@ -55,7 +55,7 @@ var pawnFigure = () => ({
     sameAttackMoves: [{x: 1, y: 1}, {x: -1, y: 1}],
 });
 
-var figure = {
+const figure = {
     king: kingFigure(),
     queen: queenFigure(),
     rook: rookFigure(),
@@ -64,28 +64,26 @@ var figure = {
     pawn: pawnFigure(),
 };
 
-var getFigure = type => {
-    return copy(figure[type]);
-};
+const getFigure = type => copy(figure[type]);
 
-var drawBoard = (context, size) => {
-    var amountOfTiles = 8;
+const drawBoard = (context, size) => {
+    const amountOfTiles = 8;
 
     if (size % amountOfTiles !== 0) {
         throw 'incorrect board size!';
     }
 
-    var unit = size / amountOfTiles;
+    const unit = size / amountOfTiles;
 
-    for (var i = 0; i < amountOfTiles; i++) {
-        for (var j = 0; j < amountOfTiles; j++) {
+    for (let i = 0; i < amountOfTiles; i++) {
+        for (let j = 0; j < amountOfTiles; j++) {
             context.fillStyle = (i + j) % 2 === 0 ? 'white' : 'black';
             context.fillRect(i * unit, j * unit, unit, unit);
         }
     }
 };
 
-var getEmptySquare = location => ({
+const getEmptySquare = location => ({
     location: {
         y: location.y,
         x: location.x
@@ -93,13 +91,13 @@ var getEmptySquare = location => ({
     piece: null
 });
 
-var getEmptyBoardState = () => {
-    var state = [];
+const getEmptyBoardState = () => {
+    const state = [];
 
-    for (var i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
         state.push([]);
 
-        for (var j = 0; j < 8; j++) {
+        for (let j = 0; j < 8; j++) {
             state[i].push(getEmptySquare({
                 y: i,
                 x: j
@@ -110,8 +108,8 @@ var getEmptyBoardState = () => {
     return state;
 };
 
-var getInitialBoardState = () => {
-    var state = getEmptyBoardState();
+const getInitialBoardState = () => {
+    const state = getEmptyBoardState();
 
     state[0][0].piece = getFigure(figure.rook.type);
     state[0][1].piece = getFigure(figure.knight.type);
@@ -122,12 +120,12 @@ var getInitialBoardState = () => {
     state[0][6].piece = getFigure(figure.knight.type);
     state[0][7].piece = getFigure(figure.rook.type);
 
-    for (var i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
         state[1][i].piece = getFigure(figure.pawn.type);
     }
 
-    for (var i = 0; i < 2; i++) {
-        for (var j = 0; j < 8; j++) {
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 8; j++) {
             state[i][j].piece.player = 1;
         }
     }
@@ -141,12 +139,12 @@ var getInitialBoardState = () => {
     state[7][6].piece = getFigure(figure.knight.type);
     state[7][7].piece = getFigure(figure.rook.type);
 
-    for (var i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
         state[6][i].piece = getFigure(figure.pawn.type);
     }
 
-    for (var i = 6; i < 8; i++) {
-        for (var j = 0; j < 8; j++) {
+    for (let i = 6; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
             state[i][j].piece.player = 0;
         }
     }
@@ -154,20 +152,20 @@ var getInitialBoardState = () => {
     return state;
 };
 
-var updateBoard = (context, state, size) => {
-    var amountOfTiles = 8;
+const updateBoard = (context, state, size) => {
+    const amountOfTiles = 8;
 
     if (size % amountOfTiles !== 0) {
         throw 'incorrect board size!';
     }
 
-    var unit = canvas.height / amountOfTiles;
+    const unit = canvas.height / amountOfTiles;
 
     context.font = '40px Arial';
 
-    for (var i = 0; i < amountOfTiles; i++) {
-        for (var j = 0; j < amountOfTiles; j++) {
-            var piece = state[i][j].piece;
+    for (let i = 0; i < amountOfTiles; i++) {
+        for (let j = 0; j < amountOfTiles; j++) {
+            const piece = state[i][j].piece;
 
             if (piece) {
                 context.fillStyle = piece.player === 0 ? 'red' : 'blue';
@@ -177,38 +175,108 @@ var updateBoard = (context, state, size) => {
     }
 };
 
-var getSquare = (location, boardState) => boardState[location.y][location.x];
+const getSquare = (location, boardState) => boardState[location.y][location.x];
 
-var getAvailableSquaresToMove = (player, location, boardState) => {
-    var selectedSquare = boardState[location.y][location.x];
+const getAvailableSquaresToMove = boardState => {
+    let allowed = [];
 
-    if (selectedSquare.piece === null || selectedSquare.piece.player !== player)
-        return [];
+    const rotateSquares = (x, y) => [
+        {x, y},
+        {x: -x, y},
+        {x, y: -y},
+        {x: -x, y: -y}
+    ];
 
-    var availableSquares = [];
+    const filterTheSameSquares = squares => {
+        const result = [];
 
-    switch (selectedSquare.piece) {
-        case figure.pawn: {
+        squares.forEach(square => {
+            if (square.x === 0 && square.y === 0)
+                return;
 
-            getSquare({x: location.x, y: location.y + 1}, boardState)
+            if (!result.find(_ => _.x === square.x && _.y === square.y)) {
+                result.push({x: square.x, y: square.y});
+            }
+        });
 
+        return result;
+    };
 
-        }
+    const filterOutOfBoard = squares => {
+        const result = [];
+
+        squares.forEach(square => {
+            if (square.x < 0 || square.x > 7 || square.y < 0 || square.y > 7)
+                return;
+
+            result.push({x: square.x, y: square.y});
+        });
+
+        return result;
+    };
+
+    const filterSamePlayerFigures = squares => {
+        const result = [];
+
+        squares.forEach(square => {
+            if (boardState[square.y][square.x].piece && selectedSquare.piece.player === boardState[square.y][square.x].piece.player)
+                return;
+
+            result.push({x: square.x, y: square.y});
+        });
+
+        return result;
+    };
+
+    for (const allowedMove of selectedSquare.piece.allowedMoves) {
+        if (typeof allowedMove.x == 'number' && typeof allowedMove.y == 'number') {
+            if (selectedSquare.piece.movesOnlyForward) {
+                // the pawn case.
+                let direction = selectedSquare.piece.player === 0 ? -1 : 1;
+
+                allowed = allowed.concat({x: allowedMove.x, y: direction * allowedMove.y});
+            } else {
+                allowed = allowed.concat(rotateSquares(allowedMove.x, allowedMove.y));
+            }
+        } else if (typeof allowedMove.x == 'boolean' && typeof allowedMove.y == 'boolean') {
+            for (let i = 0; i < 8; i++) {
+                allowed = allowed.concat(rotateSquares(i, i));
+            }
+        } else if (typeof allowedMove.x == 'boolean' && typeof allowedMove.y == 'number') {
+            for (let i = 0; i < 8; i++) {
+                allowed = allowed.concat(rotateSquares(i, allowedMove.y));
+            }
+        } else if (typeof allowedMove.x == 'number' && typeof allowedMove.y == 'boolean') {
+            for (let i = 0; i < 8; i++) {
+                allowed = allowed.concat(rotateSquares(allowedMove.x, i));
+            }
+        } else throw 'Wrong moves types!';
     }
 
-    for (var i = 0; i < boardState.length; i++) {
-        for (var j = 0; j < boardState[i].length; j++) {
+    allowed = allowed.map(square => ({
+        x: square.x + selectedSquare.location.x,
+        y: square.y + selectedSquare.location.y
+    }));
 
-        }
-    }
+    allowed = filterTheSameSquares(allowed);
+    allowed = filterOutOfBoard(allowed);
+    allowed = filterSamePlayerFigures(allowed);
+
+    return allowed;
 };
 
-var movePiece = (targetLocation, boardState) => {
-    var targetSquare = boardState[targetLocation.y][targetLocation.x];
+const movePiece = (allowedSquares, targetLocation, boardState) => {
+    const targetSquare = boardState[targetLocation.y][targetLocation.x];
 
     if (!targetSquare) throw 'Incorrect location!';
 
-    clearSourceSquare = () => {
+    if (!allowedSquares.find(square => square.x === targetSquare.location.x && square.y === targetSquare.location.y)) {
+        console.log('Incorrect square!');
+        selectedSquare = null;
+        return;
+    }
+
+    const clearSourceSquare = () => {
         boardState[selectedSquare.location.y][selectedSquare.location.x] = getEmptySquare({
             y: selectedSquare.location.y,
             x: selectedSquare.location.x
@@ -234,58 +302,35 @@ var movePiece = (targetLocation, boardState) => {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-var boardState = getInitialBoardState();
-var selectedSquare = null;
+const boardState = getInitialBoardState();
+let selectedSquare = null;
 
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
+const canvas = document.getElementById('canvas');
+const context = canvas.getContext('2d');
 canvas.width = 480;
 canvas.height = 480;
 
 canvas.addEventListener('click', e => {
-    let x = Math.floor(e.clientX * 8 / canvas.height);
-    let y = Math.floor(e.clientY * 8 / canvas.height);
+    const x = Math.floor(e.clientX * 8 / canvas.height);
+    const y = Math.floor(e.clientY * 8 / canvas.height);
 
     if (selectedSquare === null) {
-        var squareToCheck = getSquare({y, x}, boardState);
+        const squareToCheck = getSquare({y, x}, boardState);
 
         if (squareToCheck.piece) {
             selectedSquare = squareToCheck;
 
-            let allowed = [];
-            // multiply moves by 4
-
-            //> add locations
-            let addToAllowed = (x, y) => allowed.push({x: x + selectedSquare.location.x, y: y + selectedSquare.location.y});
-
-            for (var allowedMove of selectedSquare.piece.allowedMoves) {
-                if (typeof allowedMove.x == 'number' && typeof allowedMove.y == 'number') {
-                    addToAllowed(allowedMove.x, allowedMove.y);
-                } else if (typeof allowedMove.x == 'boolean' && typeof allowedMove.y == 'boolean') {
-                    for (var i = 0; i < 8; i++) {
-                        addToAllowed(i, i);
-                    }
-                } else if (typeof allowedMove.x == 'boolean' && typeof allowedMove.y == 'number') {
-                    for (var i = 0; i < 8; i++) {
-                        addToAllowed(i, allowedMove.y);
-                    }
-                } else if (typeof allowedMove.x == 'number' && typeof allowedMove.y == 'boolean') {
-                    for (var i = 0; i < 8; i++) {
-                        addToAllowed(allowedMove.y, allowedMove.y);
-                    }
-                } else throw 'Wrong moves types!';
-            }
-            //<
-
-            console.log(JSON.stringify(allowed));
+            console.log('allowed: ', JSON.stringify(getAvailableSquaresToMove(boardState)));
         }
     } else {
-        movePiece({y, x}, boardState);
+        const allowedSquares = getAvailableSquaresToMove(boardState);
+
+        movePiece(allowedSquares, {y, x}, boardState);
     }
 
-    drawBoard(context, canvas.height)
+    drawBoard(context, canvas.height);
     updateBoard(context, boardState, canvas.height);
 });
 
-drawBoard(context, canvas.height)
+drawBoard(context, canvas.height);
 updateBoard(context, boardState, canvas.height);
