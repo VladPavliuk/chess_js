@@ -244,10 +244,16 @@ const getAvailableSquaresToMove = boardState => {
             }
         } else if (typeof allowedMove.x == 'boolean' && typeof allowedMove.y == 'number') {
             for (let i = 0; i < 8; i++) {
+		if (boardState[allowedMove.y][i].piece === null) {
+			break;
+		}
                 allowed = allowed.concat(rotateSquares(i, allowedMove.y));
             }
         } else if (typeof allowedMove.x == 'number' && typeof allowedMove.y == 'boolean') {
             for (let i = 0; i < 8; i++) {
+		if (boardState[i][allowedMove.x].piece === null) {
+			break;
+		}
                 allowed = allowed.concat(rotateSquares(allowedMove.x, i));
             }
         } else throw 'Wrong moves types!';
